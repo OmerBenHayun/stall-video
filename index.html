@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="Training-free Detection of Generated Videos via Spatio-Temporal Likelihoods - Omer Ben Hayun, Roy Betser, Meir Yossef Levi, Levi Kassel, Guy Gilboa">
+  <meta name="description" content="STALL is a training-free method for detecting AI-generated videos by jointly modeling spatial and temporal likelihoods.">
+  <meta name="keywords" content="AI-generated video detection, zero-shot detection, training-free detection, synthetic media detection, video forensics, spatio-temporal analysis, likelihood-based detection, deepfake detection, computer vision, machine learning, AI">
+  <meta name="author" content="Omer Ben Hayun, Roy Betser, Meir Yossef Levi, Levi Kassel, Guy Gilboa">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Technion - Israel Institute of Technology">
+  <meta property="og:title" content="Training-free Detection of Generated Videos via Spatio-Temporal Likelihoods">
+  <meta property="og:description" content="STALL is a simple, training-free, theoretically justified detector that provides likelihood-based scoring for videos, jointly modeling spatial and temporal evidence within a probabilistic framework.">
+  <meta property="og:url" content="https://omerbenhayun.github.io/stall-video/">
+  <meta property="og:image" content="https://omerbenhayun.github.io/stall-video/static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="STALL - Research Preview">
+  <meta property="article:published_time" content="2026-01-01T00:00:00.000Z">
+  <meta property="article:author" content="Omer Ben Hayun">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="AI-generated video detection">
+  <meta property="article:tag" content="zero-shot detection">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Training-free Detection of Generated Videos via Spatio-Temporal Likelihoods">
+  <meta name="twitter:description" content="STALL is a simple, training-free, theoretically justified detector that provides likelihood-based scoring for videos, jointly modeling spatial and temporal evidence within a probabilistic framework.">
+  <meta name="twitter:image" content="https://omerbenhayun.github.io/stall-video/static/images/social_preview.png">
+  <meta name="twitter:image:alt" content="STALL - Research Preview">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="Training-free Detection of Generated Videos via Spatio-Temporal Likelihoods">
+  <meta name="citation_author" content="Ben Hayun, Omer">
+  <meta name="citation_author" content="Betser, Roy">
+  <meta name="citation_author" content="Levi, Meir Yossef">
+  <meta name="citation_author" content="Kassel, Levi">
+  <meta name="citation_author" content="Gilboa, Guy">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)">
+  <meta name="citation_arxiv_id" content="2603.15026">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>STALL: Training-free Detection of Generated Videos via Spatio-Temporal Likelihoods | CVPR 2026</title>
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Deferred JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Training-free Detection of Generated Videos via Spatio-Temporal Likelihoods",
+    "description": "STALL is a simple, training-free, theoretically justified detector that provides likelihood-based scoring for videos, jointly modeling spatial and temporal evidence within a probabilistic framework.",
+    "author": [
+      {"@type": "Person", "name": "Omer Ben Hayun", "affiliation": {"@type": "Organization", "name": "Technion - Israel Institute of Technology"}},
+      {"@type": "Person", "name": "Roy Betser",      "affiliation": {"@type": "Organization", "name": "Technion - Israel Institute of Technology"}},
+      {"@type": "Person", "name": "Meir Yossef Levi","affiliation": {"@type": "Organization", "name": "Technion - Israel Institute of Technology"}},
+      {"@type": "Person", "name": "Levi Kassel",     "affiliation": {"@type": "Organization", "name": "Technion - Israel Institute of Technology"}},
+      {"@type": "Person", "name": "Guy Gilboa",      "affiliation": {"@type": "Organization", "name": "Technion - Israel Institute of Technology"}}
+    ],
+    "datePublished": "2026-01-01",
+    "publisher": {"@type": "Organization", "name": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)"},
+    "url": "https://omerbenhayun.github.io/stall-video/",
+    "keywords": ["AI-generated video detection", "zero-shot detection", "training-free", "spatio-temporal", "likelihood"],
+    "sameAs": "https://arxiv.org/abs/2603.15026"
+  }
+  </script>
+
+  <style>
+    /* Results table styles */
+    .results-table-wrap {
+      overflow: hidden;
+      overflow-x: auto;
+      margin: 2rem 0;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 700px;
+    }
+    .results-table th,
+    .results-table td {
+      padding: 0.65rem 0.9rem;
+      text-align: center;
+      border: none;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .results-table thead th {
+      background: #dbeafe;
+      font-weight: 700;
+      color: var(--primary-color);
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+    .results-table tbody td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .results-table tbody td:not(:first-child) {
+      text-align: center;
+    }
+    .results-table tbody tr:nth-child(even) td {
+      background: var(--background-secondary);
+    }
+    .results-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .results-table tbody tr {
+      transition: background 0.15s ease;
+    }
+    .results-table tbody tr:not(.avg-row):hover td {
+      background: #f0f7ff !important;
+    }
+    .results-table .stall-col {
+      background: #eff6ff !important;
+      font-weight: 700;
+      color: var(--primary-color);
+      border-left: 2px solid #bfdbfe;
+      border-right: 2px solid #bfdbfe;
+    }
+    .results-table thead .stall-col {
+      background: #bfdbfe !important;
+      color: var(--primary-color);
+      border-left: 2px solid #93c5fd;
+      border-right: 2px solid #93c5fd;
+      border-top: 3px solid var(--primary-color);
+    }
+    .results-table .avg-row td {
+      font-weight: 700;
+      background: #f0fdf4 !important;
+      border-top: 2px solid #bbf7d0;
+      border-bottom: none;
+    }
+    .results-table .avg-row .stall-col {
+      background: #dcfce7 !important;
+    }
+    .results-table .section-header td {
+      background: var(--background-accent);
+      font-weight: 700;
+      font-style: italic;
+      text-align: left;
+    }
+    .benchmark-tag {
+      display: inline-block;
+      background: var(--primary-color);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+    .method-comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .method-comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .method-fig {
+      text-align: center;
+    }
+    .method-fig img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      object-position: center center;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+    }
+    .method-fig .fig-caption {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+    }
+    .branch-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    @media (max-width: 640px) {
+      .branch-cards { grid-template-columns: 1fr; }
+    }
+    .branch-card {
+      background: var(--background-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .branch-card h4 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+    .branch-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .hf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #ff9d00;
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: var(--shadow-md);
+    }
+    .hf-badge:hover {
+      background: #e08800;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================ HERO ============================================================ -->
+<section class="hero publication-header">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+
+      <h1 class="title is-1 publication-title">
+        Training-free Detection of Generated Videos<br>via Spatio-Temporal Likelihoods
+      </h1>
+
+      <div class="is-size-5 publication-authors" style="margin-bottom:0.5rem;">
+        <span class="author-block"><a href="https://github.com/OmerBenHayun" target="_blank">Omer Ben Hayun</a>,</span>
+        <span class="author-block"><a href="https://www.linkedin.com/in/roy-betser/" target="_blank">Roy Betser</a>,</span>
+        <span class="author-block"><a href="https://www.linkedin.com/in/yossi-levi-a3755a190/" target="_blank">Meir Yossef Levi</a>,</span>
+        <span class="author-block"><a href="https://www.linkedin.com/in/levi-kassel-06a478178" target="_blank">Levi Kassel</a>,</span>
+        <span class="author-block"><a href="https://guygilboa.net.technion.ac.il/" target="_blank">Guy Gilboa</a></span>
+      </div>
+
+      <div class="is-size-6" style="color: var(--text-secondary); margin-bottom: 1rem;">
+        Technion - Israel Institute of Technology
+      </div>
+
+      <div class="is-size-3 publication-authors" style="margin-bottom: 2rem;">
+        <span class="author-block">CVPR 2026</span>
+      </div>
+
+      <div class="columns is-centered" style="margin-bottom: 0;">
+        <div class="column is-narrow">
+          <div class="link-block buttons is-centered">
+            <a href="https://arxiv.org/abs/2603.15026" target="_blank" class="button is-dark is-rounded">
+              <span class="icon"><i class="ai ai-arxiv"></i></span>
+              <span>arXiv</span>
+            </a>
+            <a href="https://github.com/OmerBenHayun/STALL" target="_blank" class="button is-dark is-rounded">
+              <span class="icon"><i class="fab fa-github"></i></span>
+              <span>Code</span>
+            </a>
+            <a href="https://huggingface.co/datasets/OmerXYZ/comgenvid" target="_blank" class="button is-dark is-rounded">
+              <span>&#129303; Dataset</span>
+            </a>
+            <a href="https://medium.com/@rbetser93/detecting-ai-generated-content-using-foundation-models-e3ca711ec85f" target="_blank" class="button is-dark is-rounded">
+              <span class="icon"><i class="fab fa-medium"></i></span>
+              <span>Blog</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ TEASER ============================================================ -->
+<section class="hero teaser is-light">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <figure class="image">
+        <img src="static/images/teaser.png"
+             alt="Spatio-temporal likelihoods scatter plot. Blue dots: real videos; red dots: fake videos from ComGenVid. The two clusters are clearly separated.">
+      </figure>
+      <p class="subtitle has-text-centered" style="margin-top:1.5rem; color: var(--text-secondary); font-size:0.95rem;">
+        <strong>Spatio-temporal likelihoods per video.</strong>
+        Blue: real; red: fake (ComGenVid).
+        Joint spatio-temporal likelihoods clearly separate real and fake videos;
+        examples illustrate high/low spatial likelihood (frame realism) and temporal likelihood (motion naturalness).
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ ABSTRACT ============================================================ -->
+<section class="section" id="abstract">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Following major advances in text and image generation, the video domain has surged, producing highly realistic
+            and controllable sequences. Along with this progress, these models also raise serious concerns about
+            misinformation, making reliable detection of synthetic videos increasingly crucial.
+          </p>
+          <p>
+            Image-based detectors are fundamentally limited because they operate per frame and ignore temporal dynamics,
+            while supervised video detectors generalize poorly to unseen generators, a critical drawback given the rapid
+            emergence of new models. These challenges motivate zero-shot approaches, which avoid synthetic data and
+            instead score content against real-data statistics, enabling training-free, model-agnostic detection.
+          </p>
+          <p>
+            We introduce <strong>STALL</strong> (<strong>S</strong>patial-<strong>T</strong>emporal
+            <strong>A</strong>ggregated <strong>L</strong>og-<strong>L</strong>ikelihoods), a simple,
+            training-free, theoretically justified detector that provides likelihood-based scoring for videos, jointly
+            modeling spatial and temporal evidence within a probabilistic framework. We evaluate STALL on two public
+            benchmarks and introduce <strong>ComGenVid</strong>, a new benchmark with state-of-the-art generative models.
+            STALL consistently outperforms prior image- and video-based baselines.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ METHOD ============================================================ -->
+<section class="section is-light" id="method" style="background: var(--background-secondary);">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">How STALL Works</h2>
+
+    <figure class="image" style="margin-bottom: 1.5rem;">
+      <img src="static/images/pipeline.jpg"
+           alt="STALL method pipeline: frames are encoded into embeddings, spatial branch scores frame likelihoods, temporal branch scores inter-frame transition likelihoods, both fused into a final score.">
+    </figure>
+    <p class="has-text-centered" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2.5rem;">
+      <strong>Method overview.</strong>
+      A video is split into frames and encoded into embeddings. The spatial branch scores the likelihood of each frame
+      embedding; the temporal branch normalizes inter-frame differences and scores their likelihood analogously. The two
+      scores are fused into a unified measure that separates AI-generated from real videos.
+    </p>
+
+    <div class="branch-cards">
+      <div class="branch-card">
+        <h4>Spatial Branch</h4>
+        <p>
+          Frame embeddings are whitened using
+          statistics from a calibration set of real videos and assigned a log-likelihood under an isotropic
+          Gaussian model. The per-video spatial score is the <em>maximum</em> frame log-likelihood.
+        </p>
+      </div>
+      <div class="branch-card">
+        <h4>Temporal Branch</h4>
+        <p>
+          Inter-frame difference vectors are <em>L2-normalized</em> to lie on the unit sphere, making their
+          distribution well-approximated by a Gaussian (Maxwell-Poincar&eacute; lemma). Whitened
+          normalized transitions are scored analogously; the per-video temporal score is the
+          <em>minimum</em> transition log-likelihood.
+        </p>
+      </div>
+    </div>
+
+    <div class="content" style="margin-top: 0.5rem;">
+      <p style="text-align: center; color: var(--text-secondary);">
+        Both branch scores are converted to <strong>percentiles</strong> against the calibration distribution and
+        averaged into a final video score. Higher score = more likely real.
+        <br>
+        <strong>No training. No generated samples. Only real videos needed for calibration.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ RESULTS ============================================================ -->
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <p class="has-text-centered" style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">
+      Zero-shot detection average AUC across three benchmarks. STALL is the only method that consistently
+      maintains AUC&nbsp;&gt;&nbsp;0.5 for <em>every</em> evaluated generator (see Table&nbsp;1 in the paper).
+      AP scores and per-generator breakdowns are also reported there.
+      All results use a calibration set of real videos that is <em>completely disjoint</em> from every evaluation benchmark.
+    </p>
+
+    <div class="results-table-wrap" style="margin-bottom: 2.5rem;">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Benchmark</th>
+            <th>AEROBLADE</th>
+            <th>RIGID</th>
+            <th>ZED</th>
+            <th>D3 (L2)</th>
+            <th>D3 (cos)</th>
+            <th class="stall-col">STALL (Ours)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>VideoFeedback</td>    <td>0.58</td><td>0.63</td><td>0.54</td><td>0.54</td><td>0.55</td><td class="stall-col"><strong>0.83</strong></td></tr>
+          <tr><td>GenVideo</td>         <td>0.59</td><td>0.65</td><td>0.55</td><td>0.72</td><td>0.70</td><td class="stall-col"><strong>0.80</strong></td></tr>
+          <tr><td>ComGenVid (Ours)</td> <td>0.69</td><td>0.57</td><td>0.55</td><td>0.73</td><td>0.73</td><td class="stall-col"><strong>0.85</strong></td></tr>
+          <tr class="avg-row"><td><strong>Overall Avg</strong></td><td>0.62</td><td>0.61</td><td>0.57</td><td>0.64</td><td>0.64</td><td class="stall-col"><strong>0.82</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Comparison plots -->
+    <div class="method-comparison-grid">
+      <div class="method-fig">
+        <img src="static/images/auc_plot.jpg" alt="Average AUC comparison across all benchmarks">
+        <p class="fig-caption"><strong>Performance comparison.</strong> Average AUC across all three benchmarks. STALL is both high-performing and efficient.</p>
+      </div>
+      <div class="method-fig">
+        <img src="static/images/perturbations_plot.png" alt="Robustness to image perturbations across five severity levels">
+        <p class="fig-caption"><strong>Robustness to perturbations.</strong> JPEG compression, Gaussian blur, crop, and noise at five severity levels; STALL maintains high AUC throughout.</p>
+      </div>
+      <div class="method-fig">
+        <img src="static/images/runtime_plot.jpg" alt="Inference latency comparison per video">
+        <p class="fig-caption"><strong>Latency comparison.</strong> Inference time per video (16 frames). STALL is fast; the bulk of latency comes from the video embedder, not the detection itself.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================ QUALITATIVE ============================================================ -->
+<section class="hero is-small is-light" id="qualitative" style="background: var(--background-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Qualitative Examples</h2>
+      <div id="qualitative-carousel" class="carousel results-carousel">
+
+        <div class="item">
+          <img src="static/images/qualitative.png" loading="lazy"
+               alt="Qualitative comparison of ZED, D3, and STALL on several video clips."/>
+          <h2 class="subtitle has-text-centered">
+            <strong>Qualitative comparison of ZED, D3, and STALL.</strong>
+            Each row shows a video clip with natural or unnatural spatial/temporal behavior.
+            ZED (spatial-only) misses temporal inconsistencies; D3 (temporal-only) fails when spatial realism misleads.
+            STALL fuses both signals for robust detection.
+          </h2>
+        </div>
+
+        <div class="item">
+          <img src="static/images/qualitative_supp1.png" loading="lazy"
+               alt="Additional qualitative examples set 1."/>
+          <h2 class="subtitle has-text-centered">
+            <strong>Additional examples (set 1).</strong>
+            Thumbs indicate spatial and temporal likelihood per video.
+            Fake videos may fool spatial-only or temporal-only detectors individually;
+            STALL combines both signals to correctly identify them.
+          </h2>
+        </div>
+
+        <div class="item">
+          <img src="static/images/qualitative_supp2.png" loading="lazy"
+               alt="Additional qualitative examples set 2."/>
+          <h2 class="subtitle has-text-centered">
+            <strong>Additional examples (set 2).</strong>
+            More cases where either modality alone is ambiguous;
+            the joint STALL score correctly separates real from fake.
+          </h2>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ COMGENVID ============================================================ -->
+<section class="section" id="comgenvid">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">ComGenVid - New Benchmark</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce <strong>ComGenVid</strong>, a new benchmark curated to evaluate detection against
+            state-of-the-art commercial video generators. It contains:
+          </p>
+          <ul>
+            <li>~<strong>3,400 generated videos</strong> from <strong>Sora</strong> (OpenAI) and <strong>Veo&nbsp;3</strong> (Google DeepMind), among the most capable and realistic generators available today.</li>
+            <li>~<strong>1,700 real videos</strong> from MSVD as the real counterpart.</li>
+          </ul>
+          <p>
+            Pre-computed DINOv3 embeddings for the entire dataset are available on HuggingFace, enabling
+            zero-setup evaluation without video files or a GPU.
+          </p>
+        </div>
+        <div class="has-text-centered" style="margin-top: 1.5rem;">
+          <a href="https://huggingface.co/datasets/OmerXYZ/comgenvid" target="_blank" class="hf-badge">
+            &#129303; ComGenVid on HuggingFace
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ BIBTEX ============================================================ -->
+<section class="section is-light" id="bibtex" style="background: var(--background-secondary);">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">Citation</h2>
+        <p class="has-text-centered" style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+          If you find this work useful in your research, please consider citing us:
+        </p>
+        <div class="bibtex-header">
+          <span style="color: var(--text-secondary); font-size: 0.9rem;">BibTeX</span>
+          <button class="copy-bibtex-btn" onclick="copyBibTeX(this)">
+            <i class="fas fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre id="bibtex-content"><code>@inproceedings{hayun2026trainingfreedetectiongeneratedvideos,
+  title     = {Training-free Detection of Generated Videos via Spatial-Temporal Likelihoods},
+  author    = {{Ben Hayun}, Omer and Betser, Roy and Levi, Meir Yossef and Kassel, Levi and Gilboa, Guy},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year      = {2026},
+  eprint    = {2603.15026},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url       = {https://arxiv.org/abs/2603.15026},
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FOOTER ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            This page was built using the
+            <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>
+            which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            <br>
+            Licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<script>
+function copyBibTeX(btn) {
+  const text = document.getElementById('bibtex-content').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.querySelector('.copy-text').textContent = 'Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.querySelector('.copy-text').textContent = 'Copy';
+    }, 2000);
+  });
+}
+
+// Scroll-to-top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollToTop');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+document.getElementById('scrollToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+
+</body>
+</html>
