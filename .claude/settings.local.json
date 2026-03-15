@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/omer/my_github_repos/CVPR_2026_overleaf/**)",
+      "Read(//home/omer/my_github_repos/STALL_private/**)",
+      "Bash(cp /home/omer/g/STALL_private/assets/teaser_white_bg.png /home/omer/my_github_repos/stall-video/static/images/teaser.png)",
+      "Bash(cp /home/omer/g/CVPR_2026_overleaf/figs/video_pipeline.jpg /home/omer/my_github_repos/stall-video/static/images/pipeline.jpg)",
+      "Bash(cp /home/omer/g/CVPR_2026_overleaf/figs/Qualitative_examples_v2.png /home/omer/my_github_repos/stall-video/static/images/qualitative.png)",
+      "Bash(cp /home/omer/g/CVPR_2026_overleaf/figs/auc_plot.jpg /home/omer/my_github_repos/stall-video/static/images/auc_plot.jpg)",
+      "Bash(cp /home/omer/g/CVPR_2026_overleaf/figs/runtime_plot.jpg /home/omer/my_github_repos/stall-video/static/images/runtime_plot.jpg)",
+      "Bash(cp /home/omer/g/CVPR_2026_overleaf/figs/qualtive_supp/camera_ready/fig_1_supp_v2.png /home/omer/my_github_repos/stall-video/static/images/qualitative_supp1.png)",
+      "Bash(cp /home/omer/g/CVPR_2026_overleaf/figs/qualtive_supp/camera_ready/fig_2_supp_v2.png /home/omer/my_github_repos/stall-video/static/images/qualitative_supp2.png)",
+      "WebFetch(domain:token-verse.github.io)",
+      "Bash(curl -s https://token-verse.github.io/)",
+      "Bash(curl -s https://token-verse.github.io/static/css/bulma-carousel.min.css)",
+      "Bash(curl:*)",
+      "WebFetch(domain:wikiki.github.io)",
+      "Bash(python3 -c \"import sys,json; [print\\(f['name']\\) for f in json.load\\(sys.stdin\\)]\")",
+      "Bash(python3 -c \"import sys,json,base64; print\\(base64.b64decode\\(json.load\\(sys.stdin\\)['content']\\).decode\\(\\)\\)\")"
+    ]
+  }
+}
